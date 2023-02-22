@@ -38,15 +38,15 @@
  ### 4. 删除表
  `drop table table_name`
  ### 5. 插入数据
- > * 可不写全所有列 
- insert into table_name(列名1，列名2，..)values(值1，值2，..)
- > * 省略列名，必须写全所有列
- insert into table_name values(值1，值2，..)
- > * 一次性插入多组值
+ > * 可不写全所有列  
+ insert into table_name(列名1，列名2，..)values(值1，值2，..)  
+ > * 省略列名，必须写全所有列  
+insert into table_name values(值1，值2，..)
+ > * 一次性插入多组值  
  insert into table_name values
  (值1，值2，..)，
  (值1，值2，..)，
- (值1，值2，..)
+ (值1，值2，..)  
  **注**：字符串用单引号括起来
  ```sql
  //方法1
@@ -67,8 +67,8 @@ delete from students where s_ID = 01
 delete from students
 ```
 ### 7. 修改表结构
-> **增加列：** alter table 表名 add  字段名 数据类型
-> **删除列：** alter table 表名 drop column 字段名
+> **增加列：** alter table 表名 add  字段名 数据类型  
+> **删除列：** alter table 表名 drop column 字段名  
 > **修改字段类型：** alter table 表名 alter column 字段名 新类型
 ```sql
 //增加列
@@ -79,8 +79,8 @@ alter table students drop column s_age
 alter table students alter column s_age int
 ```
 ### 8. 更改数据
-> update 表名 set 列名 = 列值, 列名 = 列值,.. where 条件, ==不写条件则修改全表==
-`update students set s_age = 20`
+> update 表名 set 列名 = 列值, 列名 = 列值,.. where 条件, ==不写条件则修改全表==  
+> `update students set s_age = 20`
 ### 9. 查询
 - #### 查全表
 > select * from 表名
@@ -101,15 +101,15 @@ select s_name, isnull(s_age, 20)-2 from students
 select '姓名:'+s_name+s_sex from students
 ```
 - #### distinct关键字
-> 去掉重复的行，所查字段都一样才会被去掉
+> 去掉重复的行，所查字段都一样才会被去掉  
 `select distinct class_ID, s_name from students`
 - #### 条件查询
-> 1. 比较运算：>、< 、>=、<=、=、= 、!=或<>
-**注**：null值不能作比较
-> 2. between ... and ... 数值范围条件
-**注**：包括边界
-> 3. in关键字，集合列表范围查询
-**注**：not in集合里不能包含null值，因为要判断和集合里的所有元素都不等才会返回true，包含null值无法比较，任何与之比较的元素都会返回false
+> 1. 比较运算：>、< 、>=、<=、=、= 、!=或<>  
+> **注**：null值不能作比较
+> 2. between ... and ... 数值范围条件  
+> **注**：包括边界
+> 3. in关键字，集合列表范围查询  
+> **注**：not in集合里不能包含null值，因为要判断和集合里的所有元素都不等才会返回true，包含null值无法比较，任何与之比较的元素都会返回false
 ``` sql
  //查询tom的全部信息
  select * from students where s_name = 'tom'
@@ -120,8 +120,8 @@ select '姓名:'+s_name+s_sex from students
  //查Jack、linda、tom的信息
  select * from students where s_name in ('jack','linda','tom')
 ```
-> 4. 逻辑运算：and、or、not
-**注**：and的优先级高于or，也可以使用小括号强制优先级
+> 4. 逻辑运算：and、or、not  
+> **注**：and的优先级高于or，也可以使用小括号强制优先级
 ``` sql
 //查询属于1班且学号小于5的学生
 select * from students where class_ID = 1 and s_ID < 5
@@ -146,9 +146,9 @@ select * from students where s_name = 'tom' or s_ID = 2
  select * from students where s_name like '_o%'
  ```
  - #### order by 对结果集排序
- > 默认升序asc,降序为desc
- **注**：升序null值会排在最前面
- > select 列1， 列2 from 表名 order by 列名1
+ > 默认升序asc,降序为desc  
+ **注**：升序null值会排在最前面  
+ select 列1， 列2 from 表名 order by 列名1
  ``` sql
   //先按年龄升序，年龄一样则按学号升序
  select s_name, s_age, s_ID from students order by s_age, s_ID 
@@ -207,8 +207,8 @@ select * from students where s_name = 'tom' or s_ID = 2
   //取别名
   select * from student s, class c where s.clno = c.clno
   ```
-  > 2. 内连接
-  > select 列1，列2 from 表1 
+  > 2. 内连接  
+  select 列1，列2 from 表1 
   > inner join 表2
   > on 等值条件
   ``` sql
@@ -230,11 +230,14 @@ select * from students where s_name = 'tom' or s_ID = 2
   >多行子查询可用in、any、all、exists、not exists
   
   > **exists 与 in 效率比较**
+  ``` sql
   select * from A where A.userId in (select id from B where id > 100);
-select * from A where exist (select id from B where id > 100 and A.userId = B.id);
+  select * from A where exist (select id from B where id > 100 and A.userId = B.id);
+```
 >
->exists是A.length次查询，和B表数量关系不大。而in的话，B表查询出来的结果集越大，每次遍历就越耗时。
-如果是括号内查询语句耗时，且查询结果集数量小时，用in合适，如果查询语句简单并且查询结果集大时，用exist合适。
+>exists是A.length次查询，和B表数量关系不大。而in的话，B表查询出来的结果集越大，每次遍历就越耗时  
+
+>如果是括号内查询语句耗时，且查询结果集数量小时，用in合适，如果查询语句简单并且查询结果集大时，用exist合适。
 
 # 三、例句
 1. 
