@@ -94,7 +94,7 @@ alter table students alter column s_age int
 //查询学生姓名以及学生两年前的年龄
 select s_name as 姓名, s_age-2 两年前的年龄 from students
 //查询学生姓名、两年前的年龄
-//isnull(expr1,expr2)用于避免null值参与计算  
+//isnull(expr1,expr2)用于避免null值参与计算  MySQL用ifnull()
 //如果expr1是null,函数的结果就是expr2;否则就是expr1
 select s_name, isnull(s_age, 20)-2 from students
 //可用+做字符串或列与列的拼接,列得是字符串型 
@@ -105,7 +105,8 @@ select '姓名:'+s_name+s_sex from students
 `select distinct class_ID, s_name from students`
 - #### 条件查询
 > 1. 比较运算：>、< 、>=、<=、=、= 、!=或<>  
-> **注**：null值不能作比较
+> **注**： null值不能作比较  
+> NULL值与任何其它值的比较（即使是NULL）永远不会为“真”
 > 2. between ... and ... 数值范围条件  
 > **注**：包括边界
 > 3. in关键字，集合列表范围查询  
@@ -224,20 +225,22 @@ select * from students where s_name = 'tom' or s_ID = 2
   select * from student s right outer join class c on c.clno = s.clno
   ```
   - #### 子查询
-  > 主查询每进行一行的条件检索，就执行一次子查询语句，效率低。
+  
+  > - 相关子查询：子查询中需要用到父查询中的值
+  ``` sql
+  //查询某同学选修课程成绩高于他选修的所有课程平均成绩的课程号
+  select cno from sc x where grade > 
+  (select avg(grad) from sc y where x.sno = y.sno)
+  ```
+  工作原理：扫描父查询表（如 SC 表）中的每一条记录，然后将当前这条记录中的，在子查询中会用到的值代入到子查询中去，然后执行子查询并得到结果（可以看成是返回值），然后再将这个结果代入到父查询的条件中，判断父查询的条件表达式的值是否为 True，若为 True，则将当前 SC 表中的这条记录放到结果集中去。若为 False 则不放。
+  > - 非相关子查询：脱离父查询单独执行
+
   > 子查询的结果只有一行就是**单行子查询**；反之就是**多行子查询**
   >单行子查询只能进行比较
   >多行子查询可用in、any、all、exists、not exists
   
-  > **exists 与 in 效率比较**
-  ``` sql
-  select * from A where A.userId in (select id from B where id > 100);
-  select * from A where exist (select id from B where id > 100 and A.userId = B.id);
-```
->
->exists是A.length次查询，和B表数量关系不大。而in的话，B表查询出来的结果集越大，每次遍历就越耗时  
+exist原理：[https://zhuanlan.zhihu.com/p/20005249](https://zhuanlan.zhihu.com/p/20005249)
 
->如果是括号内查询语句耗时，且查询结果集数量小时，用in合适，如果查询语句简单并且查询结果集大时，用exist合适。
 
 # 三、例句
 1. 
