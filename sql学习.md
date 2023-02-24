@@ -219,7 +219,7 @@ select * from students where s_name = 'tom' or s_ID = 2
   ```
   **注**：内连接的结果和等值连接的结果是相同的，只是写法不同
   只会显示符合连接条件的数据，不会显示所有的数据
-  - #### 外连接：
+  > 3. 外连接：
   > 分为左外连接、右外连接，左外连接会列出左表全部记录，右表没有符合的记录则用null值填充；右外连接会列出右表全部记录，左表没有符合的记录则用null值填充
   ``` sql
   select * from student s right outer join class c on c.clno = s.clno
@@ -241,6 +241,20 @@ select * from students where s_name = 'tom' or s_ID = 2
   
 exist原理：[https://zhuanlan.zhihu.com/p/20005249](https://zhuanlan.zhihu.com/p/20005249)
 
+- #### 取交集：union、union all 
+  >union会排除重复行，并排序，union all不会
+  >union执行效率更高
+  ``` sql  
+  //找出id为奇数且name不以m开头的员工bonus为salary，否则为0，并排序
+  select employee_id, salary bonus from Employees  
+  where employee_id % 2 = 1 and name not like 'm%'  
+  union all  
+  select employee_id, salary*0 bonus from Employees  
+  where employee_id % 2 = 0 or name like 'm%'
+  order by employee_id
+```
+  
+
 
 # 三、例句
 1. 
@@ -261,6 +275,16 @@ WHERE DATEDIFF("2019-07-27", activity_date) < 30 AND DATEDIFF("2019-07-27", acti
 GROUP BY activity_date;
 ```
 > TIMESTAMPDIFF(DAY,start,end):返回两个日期指定单位的时间差(指定单位可以是年，季度，月，星期，天数，小时，分钟，秒等等)
-  
+3. if(条件, 为true时=, 为false时=)
+``` sql
+//性别转换
+update Salary set sex = if(sex = 'm', 'f', 'm')
+```
+4. **注**：子查询要命名，不然会报错。  
+  **注**：不能在同一个 sql 语句中，先 select 同一个表的某些值，然后再 update 这个表。
+``` sql
+DELETE from Person Where Id not in 
+(select Id from 
+( Select MIN(Id) as Id From Person Group by Email ) t)
 
  
