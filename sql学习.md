@@ -234,12 +234,8 @@ select * from students where s_name = 'tom' or s_ID = 2
   ```
   工作原理：扫描父查询表（如 SC 表）中的每一条记录，然后将当前这条记录中的，在子查询中会用到的值代入到子查询中去，然后执行子查询并得到结果（可以看成是返回值），然后再将这个结果代入到父查询的条件中，判断父查询的条件表达式的值是否为 True，若为 True，则将当前 SC 表中的这条记录放到结果集中去。若为 False 则不放。
   > - 非相关子查询：脱离父查询单独执行
-
-  > 子查询的结果只有一行就是**单行子查询**；反之就是**多行子查询**
-  >单行子查询只能进行比较
-  >多行子查询可用in、any、all、exists、not exists
-  
-exist原理：[https://zhuanlan.zhihu.com/p/20005249](https://zhuanlan.zhihu.com/p/20005249)
+  >- 子查询的结果只有一行就是**单行子查询**；反之就是**多行子查询**。单行子查询只能进行比较。多行子查询可用in、any、all、exists、not exists  
+> **exist原理**：[https://zhuanlan.zhihu.com/p/20005249](https://zhuanlan.zhihu.com/p/20005249)
 
 - #### 取交集：union、union all 
   >union会排除重复行，并排序，union all不会
@@ -252,12 +248,9 @@ exist原理：[https://zhuanlan.zhihu.com/p/20005249](https://zhuanlan.zhihu.com
   select employee_id, salary*0 bonus from Employees  
   where employee_id % 2 = 0 or name like 'm%'
   order by employee_id
-```
-  
-
-
+  ```  
 # 三、例句
-1. 
+1. case用法
 ``` sql
 select id,
     case when p_id is null then 'Root'
