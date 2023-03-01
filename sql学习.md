@@ -158,7 +158,7 @@ select * from students where s_name = 'tom' or s_ID = 2
   select s_name, s_age, s_ID from students order by s_age desc, s_ID
   ```
   - #### top关键字：限定查询记录条数
-  > **注**：mysql用limit
+  **注**：mysql用limit(a, b),表示从a开始条记录，a从0开始计数。limit(n)表示返回前n条
   ``` sql
   //查询前三名学生
   select top 3 * from students
@@ -224,6 +224,8 @@ select * from students where s_name = 'tom' or s_ID = 2
   ``` sql
   select * from student s right outer join class c on c.clno = s.clno
   ```
+  4. 全连接：表1 full join 表2 on 连接条件
+   **注**：mysql没有full join，可用左连接union右连接代替
   - #### 子查询
   
   > - 相关子查询：子查询中需要用到父查询中的值
@@ -239,7 +241,7 @@ select * from students where s_name = 'tom' or s_ID = 2
 
 - #### 取交集：union、union all 
   >union会排除重复行，并排序，union all不会
-  >union执行效率更高
+  >union all执行效率更高
   ``` sql  
   //找出id为奇数且name不以m开头的员工bonus为salary，否则为0，并排序
   select employee_id, salary bonus from Employees  
@@ -279,5 +281,32 @@ update Salary set sex = if(sex = 'm', 'f', 'm')
 DELETE from Person Where Id not in 
 (select Id from 
 ( Select MIN(Id) as Id From Person Group by Email ) t)
-
+```
+5. concat(a, b)拼接a,b ;left(name,count)返回name前count字符。
+``` sql
+select user_id, 
+concat(upper(left(name, 1)), lower(substr(name, 2))) name
+from Users order by user_id
+```
+6. groupconcat()：将分组后每组的某一字段拼接起来。默认用,分割
+``` sql
+select sell_date,count(distinct product) num_sold,
+group_concat(distinct product separator ',') products
+from activities
+group by sell_date
+order by sell_date
+```
+7. with tableA as（select语句）：相当于建立了一个临时表tableA
+```sql
+with tmp as
+(select employee_id from Employees
+union all
+select employee_id from Salaries)
+select employee_id from tmp group by 1 having count(1) = 1 order by 1 
+```
+8. 
+``` sql
+//加引号表示将固定值store1放到列store
+select product_id,"store1" store, store1 price from Products where store1 is not null
+``` 
  
