@@ -52,8 +52,8 @@ project (camketest VERSION 10.2.1.3 LANGUAGES “CXX”)
    `add_executable (helloDemo demo.cxx demo_b.cxx)`     
 6. 指定头文件搜索路径  
    `include_directories (${HELLO_SOURCE_DIR}/Hello)`
-7. 查找当前目录下所有源文件名，并将其存储到	DIR_CURR中
-    `aux_source_directory(. DIR_CURR)`
+7. 查找当前目录下所有源文件名，并将其存储到	DIR_CURR  
+   `aux_source_directory(. DIR_CURR)`
 8. 添加链接库，指明可执行文件helloDemo需要连接一个名为 function 的链接库  
    `target_link_libraries(helloDemo function)`
 # 三、cmake命令
