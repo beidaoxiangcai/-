@@ -158,7 +158,7 @@ select * from students where s_name = 'tom' or s_ID = 2
   select s_name, s_age, s_ID from students order by s_age desc, s_ID
   ```
   - #### top关键字：限定查询记录条数
-  **注**：mysql用limit(a, b),表示从a开始条记录，a从0开始计数。limit(n)表示返回前n条
+  **注**：mysql用limit a, b,表示从a开始条记录，a从0开始计数。limit n表示返回前n条。limit放句末
   ``` sql
   //查询前三名学生
   select top 3 * from students
@@ -309,6 +309,11 @@ select employee_id from tmp group by 1 having count(1) = 1 order by 1
 //加引号表示将固定值store1放到列store
 select product_id,"store1" store, store1 price from Products where store1 is not null
 ``` 
+9. 标量子查询：子查询返回的是单一值的标量，如一个数字或一个字符串，可不加from
+``` sql
+//当子查询为空（单用子查询，什么都不显示），外层查询相当于select null ，显示null
+select (select distinct salary from Employee order by salary desc limit 1,1) SecondHighestSalary
+```
 
 # 四、
 1. e-r图与关系模式转换
