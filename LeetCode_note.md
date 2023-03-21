@@ -58,52 +58,81 @@ auto pair2 = make_pair("abc", 2);
 10.  priority_queue里面放pair，默认用pair.first来比较大小。
 11. 字符串匹配——KMP算法：  
     参考：[https://www.zhihu.com/question/21923021](https://www.zhihu.com/question/21923021)  
-    ![](kmp.png)  
+    ![](kmp.png)
     求next数组：  
     next[x] 定义为： P[0]~P[x] 这一段字符串，使得k-前缀恰等于k-后缀的最大的k.
     - 当p[i + 1] == p[x + 1],next[i + 1] = next[i] + 1;  
     - 当p[i + 1] != p[x + 1].
-  > 求使得 A的k-前缀等于B的k-后缀 的最大的k。串A和串B是相同的！B的后缀等于A的后缀！因此，使得A的k-前缀等于B的k-后缀的最大的k，其实就是串A的最长公共前后缀的长度 —— next[now-1]！
-  ``` C++
+    > 求使得 A的k-前缀等于B的k-后缀 的最大的k。串A和串B是相同的！B的后缀等于A的后缀！因此，使得A的k-前缀等于B的k-后缀的最大的k，其实就是串A的最长公共前后缀的长度 —— next[now-1]！
+     ``` C++
+    class Solution {
+    public:
+        //部分匹配表
+        void matchForm(string needle,vector<int>& next){
+            int k = 0;//模式串下标
+            for(int i = 1; i < needle.size(); i++){//i为next数组下标
+                while(k > 0 && needle[k] != needle[i]){
+                    k = next[k - 1];
+                }
+                if(needle[k] == needle[i]){
+                    next[i] = k + 1;
+                    k++;
+                }
+                if(k == 0){
+                    next[i] = 0;
+                }
+            }
+            return;
+        }
+        int strStr(string haystack, string needle) {
+            vector<int> next(needle.size(), 0);
+            matchForm(needle, next);
+            int i = 0, j = 0;//i表示haystack正在比较的下标；j是neddle上的
+            for(; j < needle.size() && i < haystack.size();){
+                if(haystack[i] == needle[j]){
+                    j++;
+                    i++;
+                }else if(j == 0){
+                    i++;
+                }else{
+                    j = next[j - 1];
+                }
+            }
+            if(j == needle.size()){
+                return i - j;
+            }else{
+                return -1;
+            }
+            
+        }
+    };
+    ```  
+12.  前缀树：用于存储、查询字符串、查询字符串前缀。  
+    节点：   
+    - bool isEnd; //用于指示一个单词结束了  
+    - vector<Trie*> next(26, nullptr); //i为当前字母字典序，next[i] != nullptr表示这个字母存在，并指向下一个节点。若当前字母为最后一个字母，下一节点的isEnd = true,且next数组元素全为nullptr。
+13. 前缀和：力扣560-求nums连续子数组和为k的个数
+    - pre[n]表示nums[0]+...+nums[n]的总和；
+    - pre[i] - pre[j - 1] == k, 即表示nums[j]+..+nums[i]和为k；
+    - pre[j - 1] = pre[i] - k.
+    - 因此，问题转化为求出每个pre[i]时，pre[i]-k 存在的个数即为以i结尾的连续和为k的个数。
+    - 可以用unordered_map存储求出的每个pre[i],并记录数值出现的次数。
+  ```C++
   class Solution {
 public:
-    //部分匹配表
-    void matchForm(string needle,vector<int>& next){
-        int k = 0;//模式串下标
-        for(int i = 1; i < needle.size(); i++){//i为next数组下标
-            while(k > 0 && needle[k] != needle[i]){
-                k = next[k - 1];
+    int subarraySum(vector<int>& nums, int k) {
+        //pre[n]表示nums[0]至nums[n]的和，pre[i] - pre[j - 1] == k, 即表示nums[j]至nums[n]和为k.
+        unordered_map<int, int> myMap;
+        myMap[0] = 1;//使得最小的j从0开始
+        int pre = 0, count = 0;
+        for(int i = 0; i < nums.size(); i++){
+            pre += nums[i];
+            if(myMap.find(pre - k) != myMap.end()){
+                count += myMap[pre - k];
             }
-            if(needle[k] == needle[i]){
-                next[i] = k + 1;
-                k++;
-            }
-            if(k == 0){
-                next[i] = 0;
-            }
+            myMap[pre] += 1;
         }
-        return;
-    }
-    int strStr(string haystack, string needle) {
-        vector<int> next(needle.size(), 0);
-        matchForm(needle, next);
-        int i = 0, j = 0;//i表示haystack正在比较的下标；j是neddle上的
-        for(; j < needle.size() && i < haystack.size();){
-            if(haystack[i] == needle[j]){
-                j++;
-                i++;
-            }else if(j == 0){
-                i++;
-            }else{
-                j = next[j - 1];
-            }
-        }
-        if(j == needle.size()){
-            return i - j;
-        }else{
-            return -1;
-        }
-        
+        return count;
     }
 };
 ```
