@@ -4,7 +4,7 @@
    2*(a+b) = a+b+n*L  
    a = n*L - b  
    因此，fast此时再走a距离，即2a+b+n*L = a + 2n*L，也就是此时fast位于环入口处。  
-   所有创建一个指针指向head，和fast一起往后走，他们相遇时即为环入口。
+   所以创建一个指针指向head，和fast一起往后走，他们相遇时即为环入口。
 
 2. priority_queue优先队列：默认为大顶堆  
    小顶堆写法示例：priority_queue<int, vector<int>, greater<int>>。
@@ -117,22 +117,68 @@ auto pair2 = make_pair("abc", 2);
     - pre[j - 1] = pre[i] - k.
     - 因此，问题转化为求出每个pre[i]时，pre[i]-k 存在的个数即为以i结尾的连续和为k的个数。
     - 可以用unordered_map存储求出的每个pre[i],并记录数值出现的次数。
-  ```C++
-  class Solution {
-public:
-    int subarraySum(vector<int>& nums, int k) {
-        //pre[n]表示nums[0]至nums[n]的和，pre[i] - pre[j - 1] == k, 即表示nums[j]至nums[n]和为k.
-        unordered_map<int, int> myMap;
-        myMap[0] = 1;//使得最小的j从0开始
-        int pre = 0, count = 0;
-        for(int i = 0; i < nums.size(); i++){
-            pre += nums[i];
-            if(myMap.find(pre - k) != myMap.end()){
-                count += myMap[pre - k];
+    ```C++
+    class Solution {
+    public:
+        int subarraySum(vector<int>& nums, int k) {
+            //pre[n]表示nums[0]至nums[n]的和，pre[i] - pre[j - 1] == k, 即表示nums[j]至nums[n]和为k.
+            unordered_map<int, int> myMap;
+            myMap[0] = 1;//使得最小的j从0开始
+            int pre = 0, count = 0;
+            for(int i = 0; i < nums.size(); i++){
+                pre += nums[i];
+                if(myMap.find(pre - k) != myMap.end()){
+                    count += myMap[pre - k];
+                }
+                myMap[pre] += 1;
             }
-            myMap[pre] += 1;
+            return count;
         }
+<<<<<<< HEAD
         return count;
     }
 };
 ```
+=======
+    };
+    ```
+14. - isdigit(a):判断a是否为数字
+    - isalpha(a):判断a是否为字母，包括大小写
+    - atoi(a.c_str())返回字符串a转变的int
+15. unordered_map不能用sort排序。
+16. 任务调度器：力扣621
+    给你一个用字符数组 tasks 表示的 CPU 需要执行的任务列表。其中每个字母表示一种不同种类的任务。任务可以以任意顺序执行，并且每个任务都可以在 1 个单位时间内执行完。在任何一个单位时间，CPU 可以完成一个任务，或者处于待命状态。
+
+    然而，两个 相同种类 的任务之间必须有长度为整数 n 的冷却时间，因此至少有连续 n 个单位时间内 CPU 在执行不同的任务，或者在待命状态。
+
+    你需要计算完成所有任务所需要的 最短时间 。
+    解题：
+    - count表示最终要花的时间，length表示tasks的长度。count >= length。
+    - 用大小为26的vector<int> nums记录tasks个数，然后降序sort。从个数最多的task开始(个数记为max_num)，需要的时间为（max_num - 1）* (n + 1) + 1，其中包含空位。
+    - 开始放后面的task，若还有空位，且task的个数与max_num相等，count++，task的个数小于max_num，直接放空位里；若没有空位，count = length。
+    - result = max（count, length）
+  17. vector<int>降序sort: sort(v.begin(), v.end(), greater<int>());//不要忘记greater<int>后面的括号。
+  18. 运算符优先级：（从上到下，优先级递增）
+        - ()、[]
+        - !、++、--、(正)+、(负)-
+        - *、/、%
+        - +、-
+        - \>>、<<
+        - \>、<、>=、<=
+        - ==、!=
+        - &
+        - ^
+        - |
+        - &&
+        - ||
+        - ?:
+        - =、以及各种运算加等号例(+=)
+  19. int最值：INT_MIN, INT_MAX
+  20. 数组可直接通过==比较。
+  21. 访问字典中不存在的键会返回值类型的0值。
+  22. 动态规划：
+    - 有什么状态？
+    - 怎么达到这个状态？
+    - 由谁决定？
+
+>>>>>>> 3de9302 (!)

@@ -158,7 +158,7 @@ select * from students where s_name = 'tom' or s_ID = 2
   select s_name, s_age, s_ID from students order by s_age desc, s_ID
   ```
   - #### top关键字：限定查询记录条数
-  **注**：mysql用limit a, b,表示从a开始条记录，a从0开始计数。limit n表示返回前n条。limit放句末
+  **注**：mysql用limit a, b,表示从a开始条记录，a从0开始计数。limit n表示返回前n条。limit放句末，limit N, M:从第 N 条记录开始, 返回 M 条记录
   ``` sql
   //查询前三名学生
   select top 3 * from students
@@ -228,19 +228,19 @@ select * from students where s_name = 'tom' or s_ID = 2
    **注**：mysql没有full join，可用左连接union右连接代替
   - #### 子查询
   
-  > - 相关子查询：子查询中需要用到父查询中的值
+  > - 相关子查询：子查询中需要用到父查询中的值,先执行外部，再执行内部
   ``` sql
   //查询某同学选修课程成绩高于他选修的所有课程平均成绩的课程号
   select cno from sc x where grade > 
   (select avg(grad) from sc y where x.sno = y.sno)
   ```
   工作原理：扫描父查询表（如 SC 表）中的每一条记录，然后将当前这条记录中的，在子查询中会用到的值代入到子查询中去，然后执行子查询并得到结果（可以看成是返回值），然后再将这个结果代入到父查询的条件中，判断父查询的条件表达式的值是否为 True，若为 True，则将当前 SC 表中的这条记录放到结果集中去。若为 False 则不放。
-  > - 非相关子查询：脱离父查询单独执行
+  > - 非相关子查询：脱离父查询单独执行，先查子查询再查父查询。
   >- 子查询的结果只有一行就是**单行子查询**；反之就是**多行子查询**。单行子查询只能进行比较。多行子查询可用in、any、all、exists、not exists  
 > **exist原理**：[https://zhuanlan.zhihu.com/p/20005249](https://zhuanlan.zhihu.com/p/20005249)
 
 - #### 取交集：union、union all 
-  >union会排除重复行，并排序，union all不会
+  >union会排除重复行，并排序，union all不会  
   >union all执行效率更高
   ``` sql  
   //找出id为奇数且name不以m开头的员工bonus为salary，否则为0，并排序
@@ -261,7 +261,7 @@ select id,
     end as Type
 from tree
 ```
-2. **mysql** datadiff(date1, date2)函数
+2. **mysql** datediff(date1, date2)函数
 > 函数返回date1 -date2的计算结果;如果参数传递的是日期时间值，DATEDIFF函数仅将日期部分用于计算，并==忽略时间部分==
 ``` sql
 SELECT activity_date day, COUNT(DISTINCT  user_id) active_users
@@ -314,6 +314,18 @@ select product_id,"store1" store, store1 price from Products where store1 is not
 //当子查询为空（单用子查询，什么都不显示），外层查询相当于select null ，显示null
 select (select distinct salary from Employee order by salary desc limit 1,1) SecondHighestSalary
 ```
+10. 自动生成序号：
+    - row_number() 每排都加1
+    - rank() 相等时，序号不变，且序号不连续，如1，2，2，4，5
+    - dense_rank() 相等时序号不变，但序号连续，如1,2,2,3,4
+  ``` sql
+  //别名的引号不能省略
+  select scores, dense_rank() over(order by score desc) as 'rank' from Scores;
+  ```
+  11. numeric(m,n):m表示总的位数，n表示小数位数。SQL server和mySql中等价于decimal。
+     ``` sql
+     select round(grade, 2) from mark//查找成绩，并精确到小数后两位，但不改变小数位数。例如88.4567->88.4600
+     select cast(round(grade,2) as decimal(10, 2))from mark//88.4567->88.46。10表示总的位数，2表示小数后位数。cast用于执行数据类型转换
 
 # 四、
 1. e-r图与关系模式转换
@@ -335,7 +347,8 @@ select (select distinct salary from Employee order by salary desc limit 1,1) Sec
 4. - mysql的执行过程
    [https://www.jianshu.com/p/338092a0a8c6](https://www.jianshu.com/p/338092a0a8c6)
    - 索引[https://bbs.huaweicloud.com/blogs/333163](https://bbs.huaweicloud.com/blogs/333163)
-  
+5. SQL 语句的语法顺序和其执行顺序:  
+   假设当前的 SQL 语法顺序为 select from join on where group by having union order by，其执行顺序为 from on join where group by having select distinct union order by。 
   
 
  
