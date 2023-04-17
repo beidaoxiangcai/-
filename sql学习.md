@@ -47,7 +47,8 @@ insert into table_name values(值1，值2，..)
  (值1，值2，..)，
  (值1，值2，..)，
  (值1，值2，..)  
- **注**：字符串用单引号括起来
+ **注**：字符串用单引号括起来，date型数据插入格式‘yyyy-mm-dd’
+  
  ```sql
  //方法1
 insert into students(s_ID, s_name, s_sex, s_phoneNumber)values(01, 'tom', '男','121212121')
@@ -349,6 +350,13 @@ select (select distinct salary from Employee order by salary desc limit 1,1) Sec
    - 索引[https://bbs.huaweicloud.com/blogs/333163](https://bbs.huaweicloud.com/blogs/333163)
 5. SQL 语句的语法顺序和其执行顺序:  
    假设当前的 SQL 语法顺序为 select from join on where group by having union order by，其执行顺序为 from on join where group by having select distinct union order by。 
+6. char与varchar区别
+   - char型数据会按设定大小保存，实际大小小于设定大小的会用空格填充。
+   - varchar只保留数据大小和实际大小的数据
+7. varchar为变长型，那设定的大小有什么用呢？
+   - varchar(20)与varchar(100)区别在于，读入内存时为保证有足够的空间，会预留出与设定大小相等的空间，所以应尽可能选择合适的大小。
+   - 有约束作用，插入数据时若超过设定值，将无法插入。
+
   
 
  
