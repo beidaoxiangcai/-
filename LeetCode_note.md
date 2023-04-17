@@ -134,12 +134,6 @@ auto pair2 = make_pair("abc", 2);
             }
             return count;
         }
-<<<<<<< HEAD
-        return count;
-    }
-};
-```
-=======
     };
     ```
 14. - isdigit(a):判断a是否为数字
@@ -176,9 +170,11 @@ auto pair2 = make_pair("abc", 2);
   19. int最值：INT_MIN, INT_MAX
   20. 数组可直接通过==比较。
   21. 访问字典中不存在的键会返回值类型的0值。
-  22. 动态规划：
-    - 有什么状态？
-    - 怎么达到这个状态？
+  22. 动态规划：  
+    - 有什么状态？  
+    - 怎么达到这个状态？  
     - 由谁决定？
+  23. vector insert，o(n)
+    用法：insert(迭代器i，元素)，在迭代器i前插入元素 
 
->>>>>>> 3de9302 (!)
+
